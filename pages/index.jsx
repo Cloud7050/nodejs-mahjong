@@ -3,19 +3,25 @@ import { useEffect, useState } from "react";
 import Divider from "../components/bootstrap/divider.jsx";
 import LightTile from "../components/bootstrap/lightTile.jsx";
 import Spacer from "../components/bootstrap/spacer.jsx";
-import { ensureId } from "../utilities/browser/id.js";
-import { DEFAULT_NICKNAME, INVITE_CODE_LENGTH, MAX_NICKNAME_LENGTH } from "../utilities/constants.js";
+import { ensureId, retrieveId } from "../utilities/browser/id.js";
+import { DEFAULT_NICKNAME, INVITE_CODE_LENGTH, MAX_NICKNAME_LENGTH, PATH_API_HOST, PATH_WAITING_ROOM } from "../utilities/constants.js";
 import utilities from "../styles/utilities.module.css";
-import { l } from "../utilities/logging.js";
+import { toValidNickname } from "../utilities/nickname.js";
+import { StatusCodes } from "http-status-codes";
+import { useRouter } from "next/router";
 
 
 
 /* [Exports] */
 export default function Index() {
+	let router = useRouter();
+
 	let [isNicknameFocused, setIsNicknameFocused] = useState(false);
 	let [nickname, setNickname] = useState(null);
 
 	let [isInviteFilled, setIsInviteFilled] = useState(false);
+
+	let [hostError, setHostError] = useState(null);
 
 	function onNicknameFocus(_event) {
 		setIsNicknameFocused(true);
@@ -23,9 +29,9 @@ export default function Index() {
 
 	function onNicknameChange(event) {
 		let newNickname = event.target.value;
-		if (newNickname.length === 0) newNickname = null;
-
-		setNickname(newNickname);
+		setNickname(
+			toValidNickname(newNickname)
+		);
 	}
 
 	function onNicknameBlur(_event) {
@@ -41,9 +47,44 @@ export default function Index() {
 		event.target.value = uppercaseLetters;
 	}
 
+	async function onClickHost(_event) {
+		setHostError(null);
+
+		let response = await fetch(
+			PATH_API_HOST,
+			{
+				method: "POST",
+				body: JSON.stringify({
+					id: retrieveId(),
+					nickname
+				})
+			}
+		);
+
+		let statusCode = response.status;
+		if (statusCode !== StatusCodes.OK) {
+			setHostError(
+				`Whoops! Server responded with status code ${statusCode} while trying to start your game`
+			);
+			return;
+		}
+
+		let data = await response.json();
+		let { inviteCode } = data;
+
+		router.push({
+			pathname: PATH_WAITING_ROOM,
+			query: {
+				c: inviteCode
+			}
+		});
+	}
+
 	useEffect(
 		() => {
 			ensureId();
+
+			router.prefetch(PATH_WAITING_ROOM);
 		},
 		[]
 	);
@@ -83,7 +124,7 @@ export default function Index() {
 						/>
 					</div>
 					<div className={ `flex-grow-1 ${utilities.flexBasis0}` }>
-						<div className="ps-3">
+						<div className="px-3">
 							{ isNicknameFocused && `${nickname?.length ?? 0}/${MAX_NICKNAME_LENGTH} characters` }
 						</div>
 					</div>
@@ -123,7 +164,15 @@ export default function Index() {
 				<div className="mb-2">
 					Start a new game for other players to join
 				</div>
-				<button className="btn btn-success">Host!</button>
+				<div className="d-flex align-items-baseline">
+					<button
+						className="btn btn-success"
+						onClick={ onClickHost }
+					>Host!</button>
+					<div className="px-3 text-danger">
+						{ hostError !== null && hostError }
+					</div>
+				</div>
 			</LightTile>
 
 			<hr className="text-light"/>
