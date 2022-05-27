@@ -1,11 +1,17 @@
-- Basic server/client setup with React start page
-- Initial start page UI
-- Next.js routing from start to game page via button
-- Browser UUID generation, storage & connection via Socket.io
-- Game creation with generated code, display code in-game, server recognise ongoing game's code & players
-- Server data persistence per code
-- Polishing for players to create, join, **rejoin**, be in simultaneous games. Player cap
+- Connection via Socket.io
 - Player naming! Two-sided validation
+- Waiting room UI
+- Host games
+- Join waiting room or reject
+- Waiting room player management
+- Waiting room two-sided start validation
+
+---
+
+- Rotate device confirmation
+- Enter game room
+- Display invite code in-game
+- Polishing for players to create, join, **rejoin**, be in simultaneous games. Player cap
 
 ---
 
@@ -28,3 +34,9 @@
 - Animations when transitioning game states, eg discard or draw
 - Polishing
 - Beta test!
+
+---
+
+### Other Ideas
+
+- Themed colour coding for player numbers, tile outlines for last ownership
