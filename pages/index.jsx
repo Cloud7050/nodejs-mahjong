@@ -1,12 +1,21 @@
 /* [Imports] */
+import { useEffect } from "react";
 import Divider from "../components/bootstrap/divider.jsx";
 import LightTile from "../components/bootstrap/lightTile.jsx";
 import Spacer from "../components/bootstrap/spacer.jsx";
+import { getId } from "../utilities/browser/id.js";
 
 
 
 /* [Exports] */
 export default function Index() {
+	useEffect(
+		() => {
+			getId();
+		},
+		[]
+	);
+
 	return <div className="vh-100 overflow-auto bg-dark">
 		<div className="p-3 container">
 			<LightTile>
