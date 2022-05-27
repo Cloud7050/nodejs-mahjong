@@ -1,8 +1,8 @@
-- Connection via Socket.io
-- Player naming! Two-sided validation
-- Waiting room UI
 - Host games
-- Join waiting room or reject
+- Join waiting room or reject (invite validation)
+- Server-side nickname validation
+- Waiting room UI
+- Connection via Socket.io
 - Waiting room player management
 - Waiting room two-sided start validation
 
