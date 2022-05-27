@@ -1,14 +1,32 @@
 /* [Imports] */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Divider from "../components/bootstrap/divider.jsx";
 import LightTile from "../components/bootstrap/lightTile.jsx";
 import Spacer from "../components/bootstrap/spacer.jsx";
 import { ensureId } from "../utilities/browser/id.js";
+import { DEFAULT_NICKNAME, MAX_NICKNAME_LENGTH } from "../utilities/constants.js";
+import utilities from "../styles/utilities.module.css";
 
 
 
 /* [Exports] */
 export default function Index() {
+	let [isNicknameFocused, setIsNicknameFocused] = useState(false);
+	let [nickname, setNickname] = useState(null);
+
+	function onNicknameFocus(_event) {
+		setIsNicknameFocused(true);
+	}
+
+	function onNicknameChange(event) {
+		let newNickname = event.target.value ?? null;
+		setNickname(newNickname);
+	}
+
+	function onNicknameBlur(_event) {
+		setIsNicknameFocused(false);
+	}
+
 	useEffect(
 		() => {
 			ensureId();
@@ -33,16 +51,26 @@ export default function Index() {
 
 			<LightTile>
 				<div className="mb-2">
-					Set your nickname{" "}
+					Set your nickname{ " " }
 					<div className="badge bg-secondary">
 						Optional
 					</div>
 				</div>
-				<div className="w-50">
-					<input
-						className="form-control"
-						placeholder="Guest"
-					/>
+				<div className="d-flex align-items-baseline">
+					<div className={ `flex-grow-1 ${utilities.flexBasis0}` }>
+						<input
+							className="form-control"
+							placeholder={ DEFAULT_NICKNAME }
+							maxLength={ MAX_NICKNAME_LENGTH }
+
+							onFocus={ onNicknameFocus }
+							onChange={ onNicknameChange }
+							onBlur={ onNicknameBlur }
+						/>
+					</div>
+					<div className={ `ps-3 flex-grow-1 ${utilities.flexBasis0}` }>
+						{ isNicknameFocused && `${nickname?.length ?? 0}/${MAX_NICKNAME_LENGTH} characters` }
+					</div>
 				</div>
 			</LightTile>
 
@@ -84,7 +112,7 @@ export default function Index() {
 						© ☁ 2022
 					</div>
 					<div>
-						Designed for mobile •{" "}
+						Designed for mobile •{ " " }
 						<a href="https://github.com/Cloud7050/nodejs-mahjong">
 							GitHub
 						</a>
