@@ -12,6 +12,7 @@ let todoTreeKeywordsAll = [
 	"LIST"
 ];
 
+// V1.0.0
 module.exports = {
 	"extends": ["eslint:recommended"],
 
@@ -20,6 +21,9 @@ module.exports = {
 		//NOTE Set to es2022 once VSCode eslint extension updates
 		// https://github.com/eslint/eslint/pull/15587
 		es2021: true
+	},
+	"parserOptions": {
+		sourceType: "module"
 	},
 
 	"rules": {
