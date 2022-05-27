@@ -4,6 +4,7 @@ module.exports = {
 	"root": true,
 
 	"rules": {
-		"react/display-name": 1
+		"react/display-name": 1,
+		"react/prop-types": 0
 	}
 };
