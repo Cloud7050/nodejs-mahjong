@@ -4,8 +4,9 @@ import Divider from "../components/bootstrap/divider.jsx";
 import LightTile from "../components/bootstrap/lightTile.jsx";
 import Spacer from "../components/bootstrap/spacer.jsx";
 import { ensureId } from "../utilities/browser/id.js";
-import { DEFAULT_NICKNAME, MAX_NICKNAME_LENGTH } from "../utilities/constants.js";
+import { DEFAULT_NICKNAME, INVITE_CODE_LENGTH, MAX_NICKNAME_LENGTH } from "../utilities/constants.js";
 import utilities from "../styles/utilities.module.css";
+import { l } from "../utilities/logging.js";
 
 
 
@@ -14,17 +15,30 @@ export default function Index() {
 	let [isNicknameFocused, setIsNicknameFocused] = useState(false);
 	let [nickname, setNickname] = useState(null);
 
+	let [isInviteFilled, setIsInviteFilled] = useState(false);
+
 	function onNicknameFocus(_event) {
 		setIsNicknameFocused(true);
 	}
 
 	function onNicknameChange(event) {
-		let newNickname = event.target.value ?? null;
+		let newNickname = event.target.value;
+		if (newNickname.length === 0) newNickname = null;
+
 		setNickname(newNickname);
 	}
 
 	function onNicknameBlur(_event) {
 		setIsNicknameFocused(false);
+	}
+
+	function onInviteChange(event) {
+		let { value } = event.target;
+		let lettersOnly = value.replace(/[^a-z]/iu, "");
+		let uppercaseLetters = lettersOnly.toUpperCase();
+
+		setIsInviteFilled(uppercaseLetters.length === INVITE_CODE_LENGTH);
+		event.target.value = uppercaseLetters;
 	}
 
 	useEffect(
@@ -70,9 +84,9 @@ export default function Index() {
 					</div>
 					<div className={ `flex-grow-1 ${utilities.flexBasis0}` }>
 						<div className="ps-3">
-						{ isNicknameFocused && `${nickname?.length ?? 0}/${MAX_NICKNAME_LENGTH} characters` }
+							{ isNicknameFocused && `${nickname?.length ?? 0}/${MAX_NICKNAME_LENGTH} characters` }
+						</div>
 					</div>
-				</div>
 				</div>
 			</LightTile>
 
@@ -83,15 +97,21 @@ export default function Index() {
 					Join a Hosted Game
 				</div>
 				<div className="mb-2">
-					Ask your game&apos;s host for the invite code
+					Ask your game&apos;s host for the invite code to enter below
 				</div>
 				<div className="w-50">
 					<div className="input-group">
 						<input
 							className="form-control"
 							placeholder="XXXXX"
+							maxLength={ INVITE_CODE_LENGTH }
+
+							onChange={ onInviteChange }
 						/>
-						<button className="btn btn-success">Join!</button>
+						<button
+							className="btn btn-success"
+							disabled={ !isInviteFilled }
+						>Join!</button>
 					</div>
 				</div>
 
