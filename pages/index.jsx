@@ -68,9 +68,11 @@ export default function Index() {
 							onBlur={ onNicknameBlur }
 						/>
 					</div>
-					<div className={ `ps-3 flex-grow-1 ${utilities.flexBasis0}` }>
+					<div className={ `flex-grow-1 ${utilities.flexBasis0}` }>
+						<div className="ps-3">
 						{ isNicknameFocused && `${nickname?.length ?? 0}/${MAX_NICKNAME_LENGTH} characters` }
 					</div>
+				</div>
 				</div>
 			</LightTile>
 
