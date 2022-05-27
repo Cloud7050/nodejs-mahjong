@@ -70,11 +70,16 @@ export default function Index() {
 			<hr className="text-light"/>
 
 			<LightTile>
-				<div className="mb-2 text-center">
-					© ☁ 2022
-				</div>
 				<div className="text-center">
-					Designed for mobile
+					<div>
+						© ☁ 2022
+					</div>
+					<div>
+						Designed for mobile •{" "}
+						<a href="https://github.com/Cloud7050/nodejs-mahjong">
+							GitHub
+						</a>
+					</div>
 				</div>
 			</LightTile>
 		</div>
