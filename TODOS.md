@@ -1,6 +1,6 @@
-- Host games
-- Join waiting room or reject (invite validation)
-- Server-side nickname validation
+- Complete Host API, db
+- Waiting room create initial page
+- Join waiting room or reject (invite validation, player status validation eg already in)
 - Waiting room UI
 - Connection via Socket.io
 - Waiting room player management
