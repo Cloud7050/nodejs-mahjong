@@ -9,34 +9,32 @@ import { KEY_ID } from "../constants.js";
 
 
 /* [Main] */
-function createId() {
-	return crypto.randomUUID();
-}
+function storeNewId() {
+	let newId = crypto.randomUUID();
 
-function storeId(id) {
 	localStorage.setItem(
 		KEY_ID,
-		id
+		newId
 	);
-}
 
-function retrieveId() {
-	return localStorage.getItem(KEY_ID);
+	return newId;
 }
 
 
 
 /* [Exports] */
-export function getId() {
+export function retrieveId() {
+	return localStorage.getItem(KEY_ID);
+}
+
+export function ensureId() {
 	let id = retrieveId();
 
-	if (id === null) {
-		id = createId();
-		storeId(id);
-		l(`Created & stored new ID: ${id}`);
-	} else {
-		l(`Retrieved existing ID: ${id}`);
+	if (id !== null) {
+		l(`ID exists: ${id}`);
+		return;
 	}
 
-	return id;
+	id = storeNewId();
+	l(`Created & stored new ID: ${id}`);
 }

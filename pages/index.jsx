@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Divider from "../components/bootstrap/divider.jsx";
 import LightTile from "../components/bootstrap/lightTile.jsx";
 import Spacer from "../components/bootstrap/spacer.jsx";
-import { getId } from "../utilities/browser/id.js";
+import { ensureId } from "../utilities/browser/id.js";
 
 
 
@@ -11,7 +11,7 @@ import { getId } from "../utilities/browser/id.js";
 export default function Index() {
 	useEffect(
 		() => {
-			getId();
+			ensureId();
 		},
 		[]
 	);
