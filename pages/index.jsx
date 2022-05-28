@@ -1,14 +1,16 @@
 /* [Imports] */
+import { StatusCodes } from "http-status-codes";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Divider from "../components/bootstrap/divider.jsx";
 import LightTile from "../components/bootstrap/lightTile.jsx";
 import Spacer from "../components/bootstrap/spacer.jsx";
-import { ensureId, retrieveId } from "../utilities/browser/id.js";
-import { DEFAULT_NICKNAME, INVITE_CODE_LENGTH, MAX_NICKNAME_LENGTH, PATH_API_HOST, PATH_WAITING_ROOM } from "../utilities/constants.js";
 import utilities from "../styles/utilities.module.css";
+import { ensureId, retrieveId } from "../utilities/browser/id.js";
+import { toWaitingRoomUrl } from "../utilities/browser/router.js";
+import { DEFAULT_NICKNAME, INVITE_CODE_LENGTH, MAX_NICKNAME_LENGTH, PATH_API_HOST, PATH_WAITING_ROOM } from "../utilities/constants.js";
+import { HostData, JoinWaitData, post } from "../utilities/http.js";
 import { toValidNickname } from "../utilities/nickname.js";
-import { StatusCodes } from "http-status-codes";
-import { useRouter } from "next/router";
 
 
 
@@ -28,10 +30,13 @@ export default function Index() {
 	}
 
 	function onNicknameChange(event) {
-		let newNickname = event.target.value;
-		setNickname(
-			toValidNickname(newNickname)
-		);
+		let input = event.target;
+
+		let newNickname = input.value;
+		let validNickname = toValidNickname(newNickname);
+
+		setNickname(validNickname);
+		input.value = validNickname ?? "";
 	}
 
 	function onNicknameBlur(_event) {
@@ -39,6 +44,7 @@ export default function Index() {
 	}
 
 	function onInviteChange(event) {
+		//TODO
 		let { value } = event.target;
 		let lettersOnly = value.replace(/[^a-z]/iu, "");
 		let uppercaseLetters = lettersOnly.toUpperCase();
@@ -50,15 +56,12 @@ export default function Index() {
 	async function onClickHost(_event) {
 		setHostError(null);
 
-		let response = await fetch(
+		let response = await post(
 			PATH_API_HOST,
-			{
-				method: "POST",
-				body: JSON.stringify({
-					id: retrieveId(),
-					nickname
-				})
-			}
+			new HostData(
+				retrieveId(),
+				nickname
+			)
 		);
 
 		let statusCode = response.status;
@@ -69,15 +72,13 @@ export default function Index() {
 			return;
 		}
 
-		let data = await response.json();
+		let json = await response.json();
+		let data = JoinWaitData.fromJson(json);
 		let { inviteCode } = data;
 
-		router.push({
-			pathname: PATH_WAITING_ROOM,
-			query: {
-				c: inviteCode
-			}
-		});
+		router.push(
+			toWaitingRoomUrl(inviteCode)
+		);
 	}
 
 	useEffect(
