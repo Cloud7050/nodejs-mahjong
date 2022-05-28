@@ -88,8 +88,8 @@ export default function Index() {
 		() => {
 			ensureId();
 
-			// Autofill with last invite for convenience, if relevant
-			setFilledInvite(retrieveLastInvite() ?? "");
+			let potentialLastInvite = retrieveLastInvite();
+			if (potentialLastInvite !== null) setFilledInvite(potentialLastInvite);
 
 			router.prefetch(PATH_WAITING_ROOM);
 		},
