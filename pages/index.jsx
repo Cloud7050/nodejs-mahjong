@@ -74,9 +74,11 @@ export default function Index() {
 
 		let json = await response.json();
 		let data = JoinWaitData.fromJson(json);
-		let { inviteCode } = data;
+		let { inviteCode, nonce } = data;
 
 		storeLastInvite(inviteCode);
+		//TODO associate nonce with invite code locally
+
 		router.push(
 			toWaitingRoomUrl(inviteCode)
 		);
