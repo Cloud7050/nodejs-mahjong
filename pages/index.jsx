@@ -7,9 +7,11 @@ import LightTile from "../components/bootstrap/lightTile.jsx";
 import Spacer from "../components/bootstrap/spacer.jsx";
 import utilities from "../styles/utilities.module.css";
 import { ensureId, retrieveId } from "../utilities/browser/id.js";
+import { retrieveLastInvite, storeLastInvite } from "../utilities/browser/invite.js";
 import { toWaitingRoomUrl } from "../utilities/browser/router.js";
 import { DEFAULT_NICKNAME, INVITE_CODE_LENGTH, MAX_NICKNAME_LENGTH, PATH_API_HOST, PATH_WAITING_ROOM } from "../utilities/constants.js";
 import { HostData, JoinWaitData, post } from "../utilities/http.js";
+import { toValidInvite } from "../utilities/invite.js";
 import { toValidNickname } from "../utilities/nickname.js";
 
 
@@ -18,10 +20,10 @@ import { toValidNickname } from "../utilities/nickname.js";
 export default function Index() {
 	let router = useRouter();
 
-	let [isNicknameFocused, setIsNicknameFocused] = useState(false);
 	let [nickname, setNickname] = useState(null);
+	let [isNicknameFocused, setIsNicknameFocused] = useState(false);
 
-	let [isInviteFilled, setIsInviteFilled] = useState(false);
+	let [filledInvite, setFilledInvite] = useState("");
 
 	let [hostError, setHostError] = useState(null);
 
@@ -36,7 +38,6 @@ export default function Index() {
 		let validNickname = toValidNickname(newNickname);
 
 		setNickname(validNickname);
-		input.value = validNickname ?? "";
 	}
 
 	function onNicknameBlur(_event) {
@@ -44,13 +45,12 @@ export default function Index() {
 	}
 
 	function onInviteChange(event) {
-		//TODO
-		let { value } = event.target;
-		let lettersOnly = value.replace(/[^a-z]/iu, "");
-		let uppercaseLetters = lettersOnly.toUpperCase();
+		let input = event.target;
 
-		setIsInviteFilled(uppercaseLetters.length === INVITE_CODE_LENGTH);
-		event.target.value = uppercaseLetters;
+		let newInvite = input.value;
+		let validInvite = toValidInvite(newInvite);
+
+		setFilledInvite(validInvite);
 	}
 
 	async function onClickHost(_event) {
@@ -76,6 +76,7 @@ export default function Index() {
 		let data = JoinWaitData.fromJson(json);
 		let { inviteCode } = data;
 
+		storeLastInvite(inviteCode);
 		router.push(
 			toWaitingRoomUrl(inviteCode)
 		);
@@ -84,6 +85,9 @@ export default function Index() {
 	useEffect(
 		() => {
 			ensureId();
+
+			// Autofill with last invite for convenience, if relevant
+			setFilledInvite(retrieveLastInvite() ?? "");
 
 			router.prefetch(PATH_WAITING_ROOM);
 		},
@@ -117,6 +121,7 @@ export default function Index() {
 						<input
 							className="form-control"
 							placeholder={ DEFAULT_NICKNAME }
+							value={ nickname ?? "" }
 							maxLength={ MAX_NICKNAME_LENGTH }
 
 							onFocus={ onNicknameFocus }
@@ -146,14 +151,17 @@ export default function Index() {
 						<input
 							className="form-control"
 							placeholder="XXXXX"
+							value={ filledInvite }
 							maxLength={ INVITE_CODE_LENGTH }
 
 							onChange={ onInviteChange }
 						/>
 						<button
 							className="btn btn-success"
-							disabled={ !isInviteFilled }
-						>Join!</button>
+							disabled={ filledInvite.length !== INVITE_CODE_LENGTH }
+						>
+							Join!
+						</button>
 					</div>
 				</div>
 
@@ -169,9 +177,11 @@ export default function Index() {
 					<button
 						className="btn btn-success"
 						onClick={ onClickHost }
-					>Host!</button>
+					>
+						Host!
+					</button>
 					<div className="px-3 text-danger">
-						{ hostError !== null && hostError }
+						{ hostError }
 					</div>
 				</div>
 			</LightTile>

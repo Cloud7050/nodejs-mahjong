@@ -1,5 +1,6 @@
 /* [Exports] */
 export const KEY_ID = "id";
+export const KEY_LAST_INVITE = "lastInvite";
 
 export const PATH_API_HOST = "api/host";
 export const PATH_WAITING_ROOM = "wait";
