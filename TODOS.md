@@ -40,3 +40,4 @@
 ### Other Ideas
 
 - Themed colour coding for player numbers, tile outlines for last ownership
+- Landing page store pre-fill code by query string, waiting room copy invite to clipboard
