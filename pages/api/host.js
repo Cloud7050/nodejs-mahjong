@@ -1,12 +1,13 @@
 /* [Imports] */
 import { StatusCodes } from "http-status-codes";
+import { database, Game, Player } from "../../data/database.js";
 import { HostData, JoinWaitData } from "../../utilities/http.js";
 import { isObject } from "../../utilities/miscellaneous.js";
 
 
 
 /* [Exports] */
-export default function(request, response) {
+export default async function(request, response) {
 	function badRequest() {
 		response.status(StatusCodes.BAD_REQUEST);
 		response.send();
@@ -25,13 +26,19 @@ export default function(request, response) {
 		return;
 	}
 
-	//TODO create game as waiting room in db, with that ID & nickname
+	let game = await Game.automatic(
+		new Player(
+			data.id,
+			data.nickname
+		)
+	);
+	await database.addGame(game);
 
 	response.status(StatusCodes.OK);
 	response.json(
 		new JoinWaitData(
-			"TODOO",
-			1
+			game.inviteCode,
+			game.gamePlayers[0].nonce
 		)
 	);
 }

@@ -1,4 +1,4 @@
-- Complete Host API, db
+- Refactor game db as TODO
 - Waiting room create initial page
 - Join waiting room or reject (invite validation, player status validation eg already in)
 - Waiting room UI
