@@ -97,12 +97,17 @@ export default function Index() {
 	return <div className="vh-100 overflow-auto bg-dark">
 		<div className="p-3 container">
 			<LightTile>
-				<div className="text-center">
-					<div className="fs-1 fw-bolder">
-						House Rules Mahjong
-					</div>
-					<div className="fst-italic">
-						Created by Cloud
+				<div className="d-flex justify-content-center">
+					<div className="d-flex flex-column text-center">
+						<h1 className="fw-bolder">
+							House Rules Mahjong
+						</h1>
+						<div className="align-self-end badge bg-primary">
+							Pre-alpha
+						</div>
+						<div className="fst-italic">
+							Created by Cloud
+						</div>
 					</div>
 				</div>
 			</LightTile>
@@ -140,9 +145,9 @@ export default function Index() {
 			<Spacer />
 
 			<LightTile>
-				<div className="mb-2 fs-2 fw-bold">
+				<h2>
 					Join a Hosted Game
-				</div>
+				</h2>
 				<div className="mb-2">
 					Ask your game&apos;s host for the invite code to enter below
 				</div>
@@ -167,9 +172,9 @@ export default function Index() {
 
 				<Divider text="OR" />
 
-				<div className="mb-2 fs-2 fw-bold">
+				<h2>
 					Host a New Game
-				</div>
+				</h2>
 				<div className="mb-2">
 					Start a new game for other players to join
 				</div>
