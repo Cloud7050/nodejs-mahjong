@@ -82,6 +82,21 @@ class Database {
 export let database = new Database();
 
 export class Game {
+	//TODO pass id/nickname (no player), create game with no players and default 0 nonce counter,
+	// add player to game using static method and return nonce, return nonce again for host API send
+	static async automatic(player) {
+		let nonceCounter = 0;
+		let firstPlayerNonce = ++nonceCounter;
+		let firstGamePlayer = player.toGamePlayer(firstPlayerNonce);
+
+		return new Game(
+			await database.useGameCounter(),
+			await generateUniqueInvite(),
+			firstPlayerNonce,
+			[firstGamePlayer]
+		);
+	}
+
 	constructor(
 		id,
 		inviteCode,
@@ -99,21 +114,6 @@ export class Game {
 				nonceCounter,
 				gamePlayers
 			}
-		);
-	}
-
-	//TODO pass id/nickname (no player), create game with no players and default 0 nonce counter,
-	// add player to game using static method and return nonce, return nonce again for host API send
-	static async automatic(player) {
-		let nonceCounter = 0;
-		let firstPlayerNonce = ++nonceCounter;
-		let firstGamePlayer = player.toGamePlayer(firstPlayerNonce);
-
-		return new Game(
-			await database.useGameCounter(),
-			await generateUniqueInvite(),
-			firstPlayerNonce,
-			[firstGamePlayer]
 		);
 	}
 }
