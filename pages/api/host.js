@@ -29,6 +29,9 @@ export default function(request, response) {
 
 	response.status(StatusCodes.OK);
 	response.json(
-		new JoinWaitData("TODOO")
+		new JoinWaitData(
+			"TODOO",
+			1
+		)
 	);
 }

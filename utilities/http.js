@@ -55,23 +55,28 @@ export class HostData {
 
 export class JoinWaitData {
 	static fromJson(json) {
-		let { inviteCode } = json;
-		return new JoinWaitData(inviteCode);
+		let { inviteCode, nonce } = json;
+		return new JoinWaitData(inviteCode, nonce);
 	}
 
 	constructor(
-		inviteCode
+		inviteCode,
+		nonce
 	) {
 		Object.assign(
 			this,
-			{ inviteCode }
+			{
+				inviteCode,
+				nonce
+			}
 		);
 	}
 
 	toJson() {
 		return JSON.stringify(
 			{
-				inviteCode: this.inviteCode
+				inviteCode: this.inviteCode,
+				nonce: this.nonce
 			}
 		);
 	}
