@@ -7,9 +7,9 @@ export function isString(potentialString) {
 }
 
 export function isObject(potentialObject) {
-	// Could be null
 	return (
-		typeof potentialObject === "object"
+		potentialObject !== null
+		&& typeof potentialObject === "object"
 		&& !Array.isArray(potentialObject)
 	);
 }

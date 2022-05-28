@@ -13,10 +13,7 @@ export default function(request, response) {
 	}
 
 	let { body } = request;
-	if (
-		body === null
-		|| !isObject(body)
-	) {
+	if (!isObject(body)) {
 		badRequest();
 		return;
 	}
